@@ -13,6 +13,8 @@
 #include <algorithm> // for std::sort
 #include <utility> // for std::pair
 #include <vector>
+#include <iostream>
+#include <fstream>
 
 #include "epan/to_str.h"
 
@@ -1858,6 +1860,13 @@ void TCPStreamDialog::on_buttonBox_accepted()
         bool save_ok = false;
         if (extension.compare(pdf_filter) == 0) {
             save_ok = ui->streamPlot->savePdf(file_name);
+            std::ofstream myfile;
+            myfile.open((file_name.toStdString() + ".csv").c_str());
+            auto data_ = base_graph_->data();
+            for (auto it = data_->begin (); it != data_->end(); it++) {
+                myfile << it->key << "," << it->value << "\n";
+            }
+            myfile.close();
         } else if (extension.compare(png_filter) == 0) {
             save_ok = ui->streamPlot->savePng(file_name);
         } else if (extension.compare(bmp_filter) == 0) {
