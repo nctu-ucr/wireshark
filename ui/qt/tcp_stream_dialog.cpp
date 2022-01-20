@@ -1860,13 +1860,45 @@ void TCPStreamDialog::on_buttonBox_accepted()
         bool save_ok = false;
         if (extension.compare(pdf_filter) == 0) {
             save_ok = ui->streamPlot->savePdf(file_name);
-            std::ofstream myfile;
-            myfile.open((file_name.toStdString() + ".csv").c_str());
-            auto data_ = base_graph_->data();
-            for (auto it = data_->begin (); it != data_->end(); it++) {
-                myfile << it->key << "," << it->value << "\n";
+            std::cout << ui->graphTypeComboBox->currentIndex() << std::endl;
+            if(ui->graphTypeComboBox->currentIndex() == 0){
+                std::ofstream myfile;
+                myfile.open((file_name.toStdString() + ".csv").c_str());
+                auto data_ = base_graph_->data();
+                for (auto it = data_->begin (); it != data_->end(); it++) {
+                    myfile << it->key << "," << it->value << "\n";
+                }
+                myfile.close();
             }
-            myfile.close();
+            if(ui->graphTypeComboBox->currentIndex() == 3){
+                std::ofstream myfile_sender_seq;
+                std::ofstream myfile_receive_ack;
+                std::ofstream myfile_ack_window;
+
+                myfile_sender_seq.open((file_name.toStdString() + "sender_seq.csv").c_str());
+                auto data_sender_seq= seg_graph_->data();
+                for (auto it = data_sender_seq->begin (); it != data_sender_seq->end(); it++) {
+                    myfile_sender_seq << it->key << "," << it->value << "\n";
+                }
+                myfile_sender_seq.close();
+
+                myfile_receive_ack.open((file_name.toStdString() + "receive_ack.csv").c_str());
+                auto data_receive_ack = ack_graph_->data();
+                for (auto it = data_receive_ack->begin (); it != data_receive_ack->end(); it++) {
+                    myfile_receive_ack << it->key << "," << it->value << "\n";
+                }
+                myfile_receive_ack.close();
+
+                myfile_ack_window.open((file_name.toStdString() + "ack_window.csv").c_str());
+                auto data_ack_window = rwin_graph_->data();
+                for (auto it = data_ack_window->begin (); it != data_ack_window->end(); it++) {
+                    myfile_ack_window << it->key << "," << it->value << "\n";
+                }
+                myfile_ack_window.close();
+            }
+
+
+
         } else if (extension.compare(png_filter) == 0) {
             save_ok = ui->streamPlot->savePng(file_name);
         } else if (extension.compare(bmp_filter) == 0) {
