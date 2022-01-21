@@ -1896,6 +1896,18 @@ void TCPStreamDialog::on_buttonBox_accepted()
                 }
                 myfile_ack_window.close();
             }
+            if(ui->graphTypeComboBox->currentIndex() == 1){
+                std::ofstream myfile_tp1;
+
+                myfile_tp1.open((file_name.toStdString() + "tp.csv").c_str());
+                auto data_tp1 = tput_graph_->data();
+                for (auto it = data_tp1->begin (); it != data_tp1->end(); it++) {
+                    myfile_tp1 << it->key << "," << it->value << "\n";
+                }
+                myfile_tp1.close();
+
+
+            }
 
 
 
